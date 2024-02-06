@@ -262,9 +262,9 @@ export function Booking() {
 													? parse(field.value, "dd/MM/yyyy", new Date())
 													: undefined
 											}
-											onSelect={(date) =>
-												field.onChange(format(date, "dd/MM/yyyy"))
-											}
+											onSelect={(
+												date: any, // Explicitly type the 'date' parameter as a Date object
+											) => field.onChange(format(date, "dd/MM/yyyy"))}
 											initialFocus
 										/>
 									</PopoverContent>
@@ -277,7 +277,7 @@ export function Booking() {
 					<FormField
 						control={form.control}
 						name="departureDate"
-						render={({ field }) => (
+						render={({ field }: { field: any }) => (
 							<FormItem className="flex flex-col">
 								<FormLabel>Дата на напускане</FormLabel>
 								<Popover>
@@ -307,7 +307,7 @@ export function Booking() {
 													? parse(field.value, "dd/MM/yyyy", new Date())
 													: undefined
 											} // Преобразуване на string в Date за календара
-											onSelect={(date) =>
+											onSelect={(date: any) =>
 												field.onChange(format(date, "dd/MM/yyyy"))
 											} // Записване на избраната дата като string
 											initialFocus
