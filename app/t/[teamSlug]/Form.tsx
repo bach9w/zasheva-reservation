@@ -280,7 +280,7 @@ export function Booking() {
 														? parse(field.value, "dd/MM/yyyy", new Date())
 														: undefined
 												}
-												onSelect={(date) =>
+												onSelect={(date: any) =>
 													field.onChange(format(date, "dd/MM/yyyy"))
 												}
 												initialFocus
@@ -325,7 +325,7 @@ export function Booking() {
 														? parse(field.value, "dd/MM/yyyy", new Date())
 														: undefined
 												} // Преобразуване на string в Date за календара
-												onSelect={(date) =>
+												onSelect={(date: any) =>
 													field.onChange(format(date, "dd/MM/yyyy"))
 												} // Записване на избраната дата като string
 												initialFocus
