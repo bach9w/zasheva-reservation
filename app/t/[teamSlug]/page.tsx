@@ -9,11 +9,12 @@ export default function Home() {
 		return null;
 	}
 	return (
-		<main className="container">
-			<h1 className="text-4xl font-extrabold my-8">{team.name}</h1>
-			<p>Поле за добавяне на резервация</p>
+		<>
+			<div className="flex items-center justify-center mt-8">
+				<h1 className="text-4xl font-extrabold">РЕЗЕРВАЦИИ</h1>
+			</div>
 
 			<MessageBoard />
-		</main>
+		</>
 	);
 }

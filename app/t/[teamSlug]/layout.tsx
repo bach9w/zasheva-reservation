@@ -1,35 +1,19 @@
-import { ConvexClientProvider } from "@/app/ConvexClientProvider";
-import { AcceptInviteDialog } from "@/app/t/AcceptInviteDialog";
-import { Notifications } from "@/app/t/Notifications";
-import { TeamMenu } from "@/app/t/TeamMenu";
-import { ProfileButton } from "@/app/t/[teamSlug]/ProfileButton";
-import { StickyHeader } from "@/components/layout/sticky-header";
-import { TeamSwitcher } from "@/app/t/TeamSwitcher";
-import { Toaster } from "@/components/ui/toaster";
-import { Suspense } from "react";
+import { SettingsMenu } from "@/app/t/[teamSlug]/settings/SettingsMenu";
+import { StickySidebar } from "@/components/layout/sticky-sidebar";
 
-export default function DashboardLayout({
-  children,
+export default function SettingsLayout({
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <Suspense>
-      <ConvexClientProvider>
-        <StickyHeader className="px-4 py-2 flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <TeamSwitcher />
-            <div className="flex items-center gap-4">
-              <Notifications />
-              <ProfileButton />
-            </div>
-          </div>
-          <TeamMenu />
-        </StickyHeader>
-        {children}
-        <AcceptInviteDialog />
-        <Toaster />
-      </ConvexClientProvider>
-    </Suspense>
-  );
+	return (
+		<div className="container sm:grid grid-cols-[12rem_minmax(0,1fr)] gap-6 px-4">
+			<StickySidebar className="hidden sm:block top-[calc(6rem+1px)] h-[calc(100vh-(6rem+1px))] py-8">
+				<SettingsMenu />
+			</StickySidebar>
+			<main className="min-h-[calc(100vh-(6rem+1px))] flex flex-col gap-6 max-w-3xl">
+				{children}
+			</main>
+		</div>
+	);
 }
