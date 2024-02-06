@@ -8,7 +8,7 @@ export default function Home() {
 		<>
 			<StickyHeader className="px-4 py-2">
 				<div className="flex justify-between items-center">
-					<span>Viem-stroy</span>
+					<span>VIEM-STROY</span>
 					<Suspense>
 						<DashboardButtons />
 					</Suspense>
