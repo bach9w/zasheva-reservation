@@ -76,7 +76,7 @@ const ListResPage = () => {
 	const { results: messages } = usePaginatedQuery(
 		api.users.teams.messages.list,
 		team == null ? "skip" : { teamId: team._id },
-		{ initialNumItems: 10 },
+		{ initialNumItems: 20 },
 	);
 
 	return (
