@@ -119,28 +119,6 @@ export function Booking() {
 		});
 	}
 	return (
-<<<<<<< HEAD
-		<Card>
-			<CardHeader></CardHeader>
-			<CardContent>
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-col  gap-6 w-full justify-center hide-lastpass-icon"
-					>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Име</FormLabel>
-									<FormControl>
-										<Textarea placeholder="Име на гост" {...field} />
-									</FormControl>
-								</FormItem>
-							)}
-						/>
-=======
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 				<FormField
@@ -367,7 +345,6 @@ export function Booking() {
 						)}
 					/>
 				</div>
->>>>>>> b275a98 (Add note field to form and messages)
 
 						<FormField
 							control={form.control}
