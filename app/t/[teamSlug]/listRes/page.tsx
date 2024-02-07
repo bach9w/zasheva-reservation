@@ -105,6 +105,9 @@ const ListResPage = () => {
 										</AccordionTrigger>
 										<AccordionContent>
 											{guestNumber(message.numberOfGuests)}
+											<br />
+											Забележка:
+											{message.note}
 										</AccordionContent>
 									</AccordionItem>
 								</Accordion>
