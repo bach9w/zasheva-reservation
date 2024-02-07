@@ -108,12 +108,14 @@ const ListResPage = () => {
 										</AccordionTrigger>
 										<AccordionContent>
 											{guestNumber(message.numberOfGuests)}
-											<br />
+											<Separator />
 											Забележка:
 											{message.note}
 											<Separator />
-											Резервацията е направена от {message.author}
-											<Separator />
+											Резервацията е направена от <br />
+											<Badge className="justify-center" variant="outline">
+												{message.author}
+											</Badge>
 										</AccordionContent>
 									</AccordionItem>
 								</Accordion>
@@ -132,8 +134,8 @@ const ListResPage = () => {
 										</AccordionTrigger>
 										<AccordionContent>
 											Повече информация
-											<br /> Booking - {message.isBooking ? "Да" : "Не"}
-											<br />
+											<Separator /> Booking - {message.isBooking ? "Да" : "Не"}
+											<Separator />
 											Сума за плащане - {message.priceToCollect} лв.
 										</AccordionContent>
 									</AccordionItem>
