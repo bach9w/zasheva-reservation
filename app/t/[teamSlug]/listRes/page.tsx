@@ -94,7 +94,7 @@ const ListResPage = () => {
 	const deleteBooking = useMutation(api.users.teams.messages.deleteBooking);
 	const { toast } = useToast();
 
-	function onDelete(_id: string) {
+	function onDelete(_id: any) {
 		void deleteBooking({ _id: _id }).then(() => {
 			toast({
 				title: "Успешно",
