@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { api } from "@/convex/_generated/api";
 import { useCurrentTeam } from "../hooks";
 import { usePaginatedQuery } from "convex/react";
+import { Separator } from "@/components/ui/separator";
 
 function roomNumber(text: string) {
 	if (text === "room3") {
@@ -110,6 +111,9 @@ const ListResPage = () => {
 											<br />
 											Забележка:
 											{message.note}
+											<Separator />
+											Резервацията е направена от {message.author}
+											<Separator />
 										</AccordionContent>
 									</AccordionItem>
 								</Accordion>
