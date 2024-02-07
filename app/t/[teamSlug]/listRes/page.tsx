@@ -15,13 +15,26 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { Badge } from "@/components/ui/badge";
 
 import { api } from "@/convex/_generated/api";
 import { useCurrentTeam } from "../hooks";
-import { usePaginatedQuery } from "convex/react";
+import { useMutation, usePaginatedQuery } from "convex/react";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/components/ui/use-toast";
 
 function roomNumber(text: string) {
 	if (text === "room3") {
@@ -78,6 +91,18 @@ const ListResPage = () => {
 		team == null ? "skip" : { teamId: team._id },
 		{ initialNumItems: 20 },
 	);
+	const deleteBooking = useMutation(api.users.teams.messages.deleteBooking);
+	const { toast } = useToast();
+
+	function onDelete(_id: string) {
+		void deleteBooking({ _id: _id }).then(() => {
+			toast({
+				title: "Успешно",
+				description: "Резервацията беше анулирана",
+				variant: "destructive",
+			});
+		});
+	}
 
 	return (
 		<div>
@@ -98,7 +123,40 @@ const ListResPage = () => {
 					{messages.map((message) => (
 						<TableRow key={message._id}>
 							<TableCell className="text-center w-1/5">
-								{message.text}
+								<Accordion type="multiple" orientation="vertical">
+									<AccordionItem key={message._id} value={message._id}>
+										<AccordionTrigger>{message.text}</AccordionTrigger>
+										<AccordionContent>
+											<AlertDialog>
+												<AlertDialogTrigger>
+													<Button variant="destructive">
+														Анулирай резервация
+													</Button>
+												</AlertDialogTrigger>
+												<AlertDialogContent>
+													<AlertDialogHeader>
+														<AlertDialogTitle>Информация</AlertDialogTitle>
+													</AlertDialogHeader>
+													<AlertDialogDescription className="text-center">
+														Име - {message.text}
+														<Separator />
+														Дата на настаняване - {message.arivalDate}
+														<Separator />
+														Дата на напускане - {message.departureDate}
+													</AlertDialogDescription>
+													<AlertDialogFooter className="flex gap-2">
+														<AlertDialogAction
+															onClick={() => onDelete(message._id)}
+														>
+															Анулирай
+														</AlertDialogAction>
+														<AlertDialogAction>Затвори</AlertDialogAction>
+													</AlertDialogFooter>
+												</AlertDialogContent>
+											</AlertDialog>
+										</AccordionContent>
+									</AccordionItem>
+								</Accordion>
 							</TableCell>
 							<TableCell className="text-center w-1/5">
 								<Accordion type="multiple" orientation="vertical">

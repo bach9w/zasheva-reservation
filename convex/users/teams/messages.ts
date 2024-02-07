@@ -82,6 +82,16 @@ export const create = mutation({
 	},
 });
 
+export const deleteBooking = mutation({
+	args: {
+		_id: v.id("messages"),
+	},
+	handler: async (ctx, { _id }) => {
+		const message = await ctx.table("messages").getX(_id);
+		await message.delete();
+	},
+});
+
 export const createBooking = mutation({
 	args: {
 		teamId: v.id("teams"),
