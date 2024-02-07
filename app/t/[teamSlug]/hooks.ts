@@ -48,3 +48,7 @@ export function useReservationRooms(room: string) {
 	const rooms = useQuery(api.functions.myNewQuery, { room: room });
 	return rooms;
 }
+export function useDayRes(day: string) {
+	const dayRes = useQuery(api.functions.myDayResQuery, { day: day });
+	return dayRes;
+}

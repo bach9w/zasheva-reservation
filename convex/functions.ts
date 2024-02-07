@@ -29,6 +29,20 @@ export const myNewQuery = baseQuery({
 	},
 });
 
+export const myDayResQuery = baseQuery({
+	args: {
+		day: v.string(),
+	},
+	handler: async (ctx, args) => {
+		const dayRes = await ctx.db
+			.query("messages")
+			.filter((q) => q.eq(q.field("arivalDate"), args.day))
+			.collect();
+
+		return dayRes;
+	},
+});
+
 export const query = customQuery(
 	baseQuery,
 	customCtx(async (baseCtx) => {
