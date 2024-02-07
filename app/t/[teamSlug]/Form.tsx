@@ -282,7 +282,7 @@ export function Booking() {
 													{field.value ? (
 														field.value // Тук вече използваме стойността директно като string
 													) : (
-														<span>Избери дате</span>
+														<span>Избери дата</span>
 													)}
 													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
 												</Button>
@@ -327,7 +327,7 @@ export function Booking() {
 													{field.value ? (
 														field.value // Тук вече използваме стойността директно като string
 													) : (
-														<span>Избери дате</span>
+														<span>Избери дата</span>
 													)}
 													<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
 												</Button>
