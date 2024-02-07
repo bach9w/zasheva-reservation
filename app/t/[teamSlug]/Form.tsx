@@ -54,6 +54,7 @@ import { useToast } from "@/components/ui/use-toast";
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
+	note: z.string().max(100),
 	room: z.string().min(1).max(10),
 	isBooking: z.boolean(),
 	isPaid: z.boolean(),
@@ -71,6 +72,7 @@ export function Booking() {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
+			note: "",
 			isBooking: false,
 			isPaid: false,
 			room: "",
@@ -87,6 +89,7 @@ export function Booking() {
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		void sendMessage({
 			text: values.name,
+			note: values.note,
 			isBooking: values.isBooking,
 			isPaid: values.isPaid,
 			roomNumber: values.room,
@@ -99,6 +102,7 @@ export function Booking() {
 			console.log(values);
 			reset({
 				name: "",
+				note: "",
 				isBooking: false,
 				isPaid: false,
 				room: "",
@@ -115,6 +119,7 @@ export function Booking() {
 		});
 	}
 	return (
+<<<<<<< HEAD
 		<Card>
 			<CardHeader></CardHeader>
 			<CardContent>
@@ -135,6 +140,234 @@ export function Booking() {
 								</FormItem>
 							)}
 						/>
+=======
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Име</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Име на гост" {...field} />
+							</FormControl>
+							<FormDescription>Име на госта</FormDescription>
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="note"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Забележка</FormLabel>
+							<FormControl>
+								<Textarea placeholder="Данни" {...field} />
+							</FormControl>
+							<FormDescription>Забележка</FormDescription>
+						</FormItem>
+					)}
+				/>
+				<div className="flex justify-evenly">
+					<FormField
+						control={form.control}
+						name="isBooking"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<div className="flex gap-x-1 border-4 hover:border-white rounded-lg p-2  justify-center">
+										<Checkbox onCheckedChange={field.onChange as () => void} />
+										<label
+											htmlFor="isBooking"
+											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+										>
+											Booking
+										</label>
+									</div>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="isPaid"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<div className="flex gap-x-1 border-4 hover:border-white rounded-lg p-2 justify-center">
+										<Checkbox onCheckedChange={field.onChange as () => void} />
+										<label
+											htmlFor="isPaid"
+											className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+										>
+											Платено
+										</label>
+									</div>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="room"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<Select onValueChange={field.onChange}>
+										<SelectTrigger className="w-[180px]">
+											<SelectValue placeholder="Номер на стая" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectLabel>Стаи</SelectLabel>
+												<SelectItem value="room3">3</SelectItem>
+												<SelectItem value="room4">4</SelectItem>
+												<SelectItem value="room5">5</SelectItem>
+												<SelectItem value="room6">6</SelectItem>
+												<SelectItem value="room7">7</SelectItem>
+												<SelectItem value="room8">8</SelectItem>
+												<SelectItem value="room9">9</SelectItem>
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				</div>
+				<div className="flex justify-around">
+					<FormField
+						control={form.control}
+						name="guests"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Брой гости</FormLabel>
+								<FormControl>
+									<Select onValueChange={field.onChange}>
+										<SelectTrigger className="w-[180px]">
+											<SelectValue placeholder="Брой гости" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectLabel>Гости</SelectLabel>
+												<SelectItem value="two">2</SelectItem>
+												<SelectItem value="three">3</SelectItem>
+												<SelectItem value="four">4</SelectItem>
+												<SelectItem value="five">5</SelectItem>
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="priceToCollect"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Сума за плащане</FormLabel>
+								<FormControl>
+									<Input placeholder="Сума за плащане" {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+				</div>
+				<div className="flex justify-evenly">
+					<FormField
+						control={form.control}
+						name="arivalDate"
+						render={({ field }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel>Дата на настаняване</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant={"outline"}
+												className={cn(
+													"w-[240px] pl-3 text-left font-normal",
+													!field.value && "text-muted-foreground",
+												)}
+											>
+												{field.value ? (
+													field.value // Тук вече използваме стойността директно като string
+												) : (
+													<span>Избери дате</span>
+												)}
+												<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											selected={
+												field.value
+													? parse(field.value, "dd/MM/yyyy", new Date())
+													: undefined
+											}
+											onSelect={(
+												date: any, // Explicitly type the 'date' parameter as a Date object
+											) => field.onChange(format(date, "dd/MM/yyyy"))}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+								<FormDescription>Дата на настаняване</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="departureDate"
+						render={({ field }: { field: any }) => (
+							<FormItem className="flex flex-col">
+								<FormLabel>Дата на напускане</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant={"outline"}
+												className={cn(
+													"w-[240px] pl-3 text-left font-normal",
+													!field.value && "text-muted-foreground",
+												)}
+											>
+												{field.value ? (
+													field.value // Тук вече използваме стойността директно като string
+												) : (
+													<span>Избери дате</span>
+												)}
+												<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent className="w-auto p-0" align="start">
+										<Calendar
+											mode="single"
+											selected={
+												field.value
+													? parse(field.value, "dd/MM/yyyy", new Date())
+													: undefined
+											} // Преобразуване на string в Date за календара
+											onSelect={(date: any) =>
+												field.onChange(format(date, "dd/MM/yyyy"))
+											} // Записване на избраната дата като string
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+								<FormDescription>Дата на напускане</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+>>>>>>> b275a98 (Add note field to form and messages)
 
 						<FormField
 							control={form.control}

@@ -32,6 +32,7 @@ export const list = query({
 					_id: message._id,
 					_creationTime: message._creationTime,
 					text: message.text,
+					note: message.note,
 					isBooking: message.isBooking,
 					isPaid: message.isPaid,
 					roomNumber: message.roomNumber,
@@ -51,6 +52,7 @@ export const create = mutation({
 	args: {
 		teamId: v.id("teams"),
 		text: v.string(),
+		note: v.string(),
 		isBooking: v.optional(v.boolean()),
 		isPaid: v.optional(v.boolean()),
 		roomNumber: v.optional(v.string()),
@@ -66,6 +68,7 @@ export const create = mutation({
 		}
 		await ctx.table("messages").insert({
 			text,
+			note: "",
 			isBooking: false,
 			isPaid: false,
 			roomNumber: "one",
@@ -83,6 +86,7 @@ export const createBooking = mutation({
 	args: {
 		teamId: v.id("teams"),
 		text: v.string(),
+		note: v.string(),
 		isBooking: v.boolean(),
 		isPaid: v.boolean(),
 		roomNumber: v.string(),
@@ -96,6 +100,7 @@ export const createBooking = mutation({
 		{
 			teamId,
 			text,
+			note,
 			isBooking,
 			isPaid,
 			roomNumber,
@@ -111,6 +116,7 @@ export const createBooking = mutation({
 		}
 		await ctx.table("messages").insert({
 			text,
+			note,
 			isBooking: isBooking,
 			isPaid,
 			roomNumber,

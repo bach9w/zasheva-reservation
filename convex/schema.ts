@@ -63,6 +63,7 @@ const schema = defineEntSchema(
 
 		messages: defineEnt({
 			text: v.string(),
+			note: v.string(),
 			isBooking: v.boolean(),
 			isPaid: v.boolean(),
 			roomNumber: v.string(),
