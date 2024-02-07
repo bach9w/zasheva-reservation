@@ -22,6 +22,7 @@ import { api } from "@/convex/_generated/api";
 import { useCurrentTeam } from "../hooks";
 import { useDayRes } from "../hooks";
 import { usePaginatedQuery } from "convex/react";
+import { Separator } from "@/components/ui/separator";
 
 function roomNumber(text: string) {
 	if (text === "room3") {
@@ -130,6 +131,9 @@ const ArrRes = () => {
 											</AccordionTrigger>
 											<AccordionContent>
 												{guestNumber(message.numberOfGuests)}
+												<Separator />
+												Забележка: <br />
+												{message.note}
 											</AccordionContent>
 										</AccordionItem>
 									</Accordion>

@@ -96,8 +96,10 @@ const ListResPage = () => {
 				<TableBody>
 					{messages.map((message) => (
 						<TableRow key={message._id}>
-							<TableCell className="text-center">{message.text}</TableCell>
-							<TableCell className="text-center">
+							<TableCell className="text-center w-1/5">
+								{message.text}
+							</TableCell>
+							<TableCell className="text-center w-1/5">
 								<Accordion type="multiple" orientation="vertical">
 									<AccordionItem key={message._id} value={message._id}>
 										<AccordionTrigger>
@@ -112,11 +114,13 @@ const ListResPage = () => {
 									</AccordionItem>
 								</Accordion>
 							</TableCell>
-							<TableCell className="text-center">
+							<TableCell className="text-center w-1/5">
 								{message.arivalDate}
 							</TableCell>
-							<TableCell>{message.departureDate}</TableCell>
-							<TableCell className="text-center">
+							<TableCell className="text-center w-1/5">
+								{message.departureDate}
+							</TableCell>
+							<TableCell className="text-center w-1/5">
 								<Accordion type="multiple">
 									<AccordionItem key={message._id} value={message._id}>
 										<AccordionTrigger>
