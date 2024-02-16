@@ -13,6 +13,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import { useReservationRooms } from "../hooks";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 function getCurrentMonth() {
 	const months = [
@@ -122,7 +124,35 @@ function GetData(room: string) {
 	}
 }
 
+const SpringModal = ({
+	isOpen,
+	setIsOpen,
+}: {
+	isOpen: boolean;
+	setIsOpen: any;
+}) => {
+	return (
+		<div>
+			{isOpen && (
+				<div>
+					Ден - 03 Стая - 3 Резервация -
+					<Button
+						onClick={() => {
+							setIsOpen(false);
+						}}
+					>
+						Close
+					</Button>
+				</div>
+			)}
+		</div>
+	);
+};
+
 const CalRes = () => {
+	const [isOpen, setIsOpen] = useState(false);
+	const [roomOpen, setRoomOpen] = useState("");
+
 	GetData("room3");
 	GetData("room4");
 	GetData("room5");
@@ -133,6 +163,7 @@ const CalRes = () => {
 
 	return (
 		<div>
+			<SpringModal isOpen={isOpen} setIsOpen={setIsOpen} />
 			<h1 className="text-center font-bold uppercase bg-red-700">Календар</h1>
 			<Table>
 				<TableCaption>Резервационен лист</TableCaption>
@@ -153,7 +184,9 @@ const CalRes = () => {
 						<TableRow key={invoice.day}>
 							<TableCell className="font-medium">{invoice.day}</TableCell>
 
-							<TableCell>{checkStatus(invoice.room3Status)}</TableCell>
+							<TableCell onClick={() => setIsOpen(true)}>
+								{checkStatus(invoice.room3Status)}
+							</TableCell>
 							<TableCell>{checkStatus(invoice.room4Status)}</TableCell>
 							<TableCell>{checkStatus(invoice.room5Status)}</TableCell>
 							<TableCell>{checkStatus(invoice.room6Status)}</TableCell>
