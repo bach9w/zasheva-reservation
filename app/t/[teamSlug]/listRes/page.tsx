@@ -89,7 +89,7 @@ const ListResPage = () => {
 	const { results: messages } = usePaginatedQuery(
 		api.users.teams.messages.list,
 		team == null ? "skip" : { teamId: team._id },
-		{ initialNumItems: 20 },
+		{ initialNumItems: 50 },
 	);
 	const deleteBooking = useMutation(api.users.teams.messages.deleteBooking);
 	const { toast } = useToast();

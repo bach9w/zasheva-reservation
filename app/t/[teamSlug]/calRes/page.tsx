@@ -44,13 +44,13 @@ function generateCurrentMonthReservations() {
 	for (let day = 1; day <= daysInMonth; day++) {
 		const reservation = {
 			day: day.toString().padStart(2, "0"),
-			room3Status: "Свободна",
-			room4Status: "Свободна",
-			room5Status: "Свободна",
-			room6Status: "Свободна",
-			room7Status: "Свободна",
-			room8Status: "Свободна",
-			room9Status: "Свободна",
+			room3Status: "F",
+			room4Status: "F",
+			room5Status: "F",
+			room6Status: "F",
+			room7Status: "F",
+			room8Status: "F",
+			room9Status: "F",
 		};
 
 		reservations.push(reservation);
@@ -79,7 +79,7 @@ function changeRoomStatus(day: string, room: string, status: string) {
 }
 
 function checkStatus(status: string) {
-	if (status === "Заета") {
+	if (status === "X") {
 		return <Badge variant="destructive">{status}</Badge>;
 	} else {
 		return <Badge variant="success">{status}</Badge>;
@@ -113,7 +113,7 @@ function GetData(room: string) {
 			let currentDate = new Date(startDate);
 			while (currentDate.getTime() <= endDate.getTime() - 1) {
 				const formattedDate = currentDate.getDate().toString().padStart(2, "0");
-				changeRoomStatus(formattedDate, room, "Заета");
+				changeRoomStatus(formattedDate, room, "X");
 
 				// Преминаваме към следващия ден
 				currentDate.setDate(currentDate.getDate() + 1);

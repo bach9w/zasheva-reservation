@@ -7,29 +7,32 @@ import { StickyHeader } from "@/components/layout/sticky-header";
 import { TeamSwitcher } from "@/app/t/TeamSwitcher";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
+import { ResponsiveSidebarButton } from "@/components/layout/responsive-sidebar-button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { StickySidebar } from "@/components/layout/sticky-sidebar";
 
 export default function DashboardLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <Suspense>
-      <ConvexClientProvider>
-        <StickyHeader className="px-4 py-2 flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <TeamSwitcher />
-            <div className="flex items-center gap-4">
-              <Notifications />
-              <ProfileButton />
-            </div>
-          </div>
-          <TeamMenu />
-        </StickyHeader>
-        {children}
-        <AcceptInviteDialog />
-        <Toaster />
-      </ConvexClientProvider>
-    </Suspense>
-  );
+	return (
+		<Suspense>
+			<ConvexClientProvider>
+				<StickyHeader className="p-2 flex items-center justify-between h-[3.25rem]">
+					<ResponsiveSidebarButton className=""></ResponsiveSidebarButton>
+
+					<TeamSwitcher />
+					<div className="flex items-center gap-4">
+						<Notifications />
+						<ProfileButton />
+					</div>
+				</StickyHeader>
+
+				{children}
+				<AcceptInviteDialog />
+				<Toaster />
+			</ConvexClientProvider>
+		</Suspense>
+	);
 }

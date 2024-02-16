@@ -7,7 +7,7 @@ import { ReactNode } from "react";
 
 export function TeamMenu() {
 	return (
-		<div className="flex gap-2">
+		<div className="flex flex-col">
 			<NavLink relativeHref="">Добави</NavLink>
 			<NavLink relativeHref="/listRes">Резервации</NavLink>
 			<NavLink relativeHref="/calRes">Календар</NavLink>
@@ -39,6 +39,9 @@ function NavLink({
 				"text-sm rounded-md bg-background px-4 py-2 transition-colors hover:bg-accent hover:text-accent-foreground",
 				active ? "text-foreground" : "text-foreground/60",
 			)}
+			onClick={(e) => {
+				e.stopPropagation();
+			}}
 		>
 			{children}
 		</Link>
