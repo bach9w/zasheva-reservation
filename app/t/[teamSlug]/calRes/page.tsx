@@ -264,12 +264,72 @@ const CalRes = () => {
 							>
 								{checkStatus(invoice.room3Status)}
 							</TableCell>
-							<TableCell>{checkStatus(invoice.room4Status)}</TableCell>
-							<TableCell>{checkStatus(invoice.room5Status)}</TableCell>
-							<TableCell>{checkStatus(invoice.room6Status)}</TableCell>
-							<TableCell>{checkStatus(invoice.room7Status)}</TableCell>
-							<TableCell>{checkStatus(invoice.room8Status)}</TableCell>
-							<TableCell>{checkStatus(invoice.room9Status)}</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room4",
+										invoice.room4Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room4Status)}
+							</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room5",
+										invoice.room5Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room5Status)}
+							</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room6",
+										invoice.room6Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room6Status)}
+							</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room7",
+										invoice.room7Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room7Status)}
+							</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room8",
+										invoice.room8Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room8Status)}
+							</TableCell>
+							<TableCell
+								onClick={() =>
+									handleClick(
+										`${invoice.day}/02/2024`,
+										"room9",
+										invoice.room9Status,
+									)
+								}
+							>
+								{checkStatus(invoice.room9Status)}
+							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
