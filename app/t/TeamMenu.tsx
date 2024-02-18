@@ -12,6 +12,7 @@ export function TeamMenu() {
 			<NavLink relativeHref="/listRes">Резервации</NavLink>
 			<NavLink relativeHref="/calRes">Календар</NavLink>
 			<NavLink relativeHref="/arrRes">Пристигащи</NavLink>
+			<NavLink relativeHref="/depRes">Напускащи</NavLink>
 
 			<NavLink relativeHref="/settings">Settings</NavLink>
 		</div>

@@ -57,6 +57,12 @@ export const ResponsiveSidebarButton = fr<HTMLButtonElement, ButtonProps>(
 								>
 									Пристигащи
 								</NavLink>
+								<NavLink
+									onClick={() => setShowSidebar(false)}
+									relativeHref="/depRes"
+								>
+									Напускащи
+								</NavLink>
 
 								<NavLink
 									onClick={() => setShowSidebar(false)}

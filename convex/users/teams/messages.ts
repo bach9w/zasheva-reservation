@@ -76,8 +76,48 @@ export const create = mutation({
 			numberOfGuests: "2",
 			arivalDate: "2022-01-01",
 			departureDate: "2022-01-02",
+			isArrived: false,
+			isDeparted: false,
+			isCleaned: false,
 			teamId: teamId,
 			memberId: member._id,
+		});
+	},
+});
+
+export const updateIsArrived = mutation({
+	args: {
+		id: v.id("messages"),
+	},
+	handler: async (ctx, args) => {
+		const { id } = args;
+
+		await ctx.table("messages").getX(id).patch({
+			isArrived: true,
+		});
+	},
+});
+export const updateIsDepartured = mutation({
+	args: {
+		id: v.id("messages"),
+	},
+	handler: async (ctx, args) => {
+		const { id } = args;
+
+		await ctx.table("messages").getX(id).patch({
+			isDeparted: true,
+		});
+	},
+});
+export const updateIsCleaned = mutation({
+	args: {
+		id: v.id("messages"),
+	},
+	handler: async (ctx, args) => {
+		const { id } = args;
+
+		await ctx.table("messages").getX(id).patch({
+			isCleaned: true,
 		});
 	},
 });
@@ -104,6 +144,9 @@ export const createBooking = mutation({
 		numberOfGuests: v.string(),
 		arivalDate: v.optional(v.any()),
 		departureDate: v.optional(v.any()),
+		isArrived: v.optional(v.boolean()),
+		isDeparted: v.optional(v.boolean()),
+		isCleaned: v.optional(v.boolean()),
 	},
 	handler: async (
 		ctx,
@@ -118,6 +161,9 @@ export const createBooking = mutation({
 			numberOfGuests,
 			arivalDate,
 			departureDate,
+			isArrived,
+			isDeparted,
+			isCleaned,
 		},
 	) => {
 		const member = await viewerWithPermissionX(ctx, teamId, "Contribute");
@@ -134,6 +180,9 @@ export const createBooking = mutation({
 			numberOfGuests,
 			arivalDate,
 			departureDate,
+			isArrived: false,
+			isDeparted: false,
+			isCleaned: false,
 			teamId: teamId,
 			memberId: member._id,
 		});

@@ -71,6 +71,9 @@ const schema = defineEntSchema(
 			numberOfGuests: v.string(),
 			arivalDate: v.any(),
 			departureDate: v.any(),
+			isArrived: v.boolean(),
+			isDeparted: v.boolean(),
+			isCleaned: v.boolean(),
 		})
 			.edge("team")
 			.edge("member"),

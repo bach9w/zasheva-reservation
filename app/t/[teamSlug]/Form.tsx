@@ -62,6 +62,9 @@ const formSchema = z.object({
 	priceToCollect: z.string().max(10),
 	arivalDate: z.string(),
 	departureDate: z.string(),
+	isArrived: z.boolean(),
+	isDeparted: z.boolean(),
+	isCleaned: z.boolean(),
 });
 
 export function Booking() {
@@ -80,6 +83,9 @@ export function Booking() {
 			guests: "",
 			arivalDate: "",
 			departureDate: "",
+			isArrived: false,
+			isDeparted: false,
+			isCleaned: false,
 		},
 	});
 

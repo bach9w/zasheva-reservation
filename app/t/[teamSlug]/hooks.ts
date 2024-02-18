@@ -61,3 +61,7 @@ export function useDayRes(day: string) {
 	const dayRes = useQuery(api.functions.myDayResQuery, { day: day });
 	return dayRes;
 }
+export function useDayRes2(day: string) {
+	const dayRes = useQuery(api.functions.depResQuery, { day: day });
+	return dayRes;
+}

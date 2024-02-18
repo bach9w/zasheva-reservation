@@ -145,7 +145,18 @@ function GetData(room: string) {
 			let currentDate = new Date(startDate);
 			while (currentDate.getTime() <= endDate.getTime() - 1) {
 				const formattedDate = currentDate.getDate().toString().padStart(2, "0");
-
+				reservations?.forEach((reservations) => {
+					if (
+						compareDatesOnly(
+							reservations.arrivalDate,
+							reservations.departureDate,
+						)
+					) {
+						changeRoomStatus(formattedDate, room, "X");
+					} else {
+						changeRoomStatus(formattedDate, room, "X");
+					}
+				});
 				if (!sortedReservations) return;
 				for (let i = 0; i < sortedReservations.length - 1; i++) {
 					const currentDepartureDate = extractDateFromString(
@@ -161,8 +172,10 @@ function GetData(room: string) {
 						nextArrivalDate.toDateString()
 					) {
 						// Тук задайте статуса на "C" за почистване за датата на заминаване/пристигане
-						changeRoomStatus(formattedDate, room, "X");
+						changeRoomStatus(formattedDate, room, "C");
 						// Можете да добавите логика за актуализиране на състоянието на резервацията тук
+					} else {
+						changeRoomStatus(formattedDate, room, "X");
 					}
 				}
 

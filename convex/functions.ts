@@ -42,6 +42,19 @@ export const myDayResQuery = baseQuery({
 		return dayRes;
 	},
 });
+export const depResQuery = baseQuery({
+	args: {
+		day: v.string(),
+	},
+	handler: async (ctx, args) => {
+		const dayRes = await ctx.db
+			.query("messages")
+			.filter((q) => q.eq(q.field("departureDate"), args.day))
+			.collect();
+
+		return dayRes;
+	},
+});
 
 export const roomReservationInfo = baseQuery({
 	args: {

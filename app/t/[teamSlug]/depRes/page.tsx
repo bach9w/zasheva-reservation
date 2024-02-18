@@ -20,11 +20,12 @@ import { Badge } from "@/components/ui/badge";
 
 import { api } from "@/convex/_generated/api";
 import { useCurrentTeam } from "../hooks";
-import { useDayRes } from "../hooks";
+import { useDayRes2 } from "../hooks";
 import { usePaginatedQuery } from "convex/react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { AlertDialogDemo } from "./alert-arrived";
+import { AlertDialogDeparted } from "./alert-arrived";
+import { AlertDialogCleaned } from "./alert-cleaned";
 
 function roomNumber(text: string) {
 	if (text === "room3") {
@@ -84,7 +85,7 @@ function getFullDate() {
 	const day = String(date.getDate()).padStart(2, "0");
 	const month = String(date.getMonth() + 1).padStart(2, "0");
 	const year = String(date.getFullYear());
-	const formattedDate = `${day}/${month}/${year}/14:00`;
+	const formattedDate = `${day}/${month}/${year}/12:00`;
 	return formattedDate;
 }
 
@@ -96,7 +97,7 @@ function splitDate(date: string) {
 
 const ArrRes = () => {
 	const team = useCurrentTeam();
-	const messages = useDayRes(getFullDate().toString());
+	const messages = useDayRes2(getFullDate().toString());
 
 	const today = getCurrentDate();
 	const formattedToday = today.toString().padStart(2, "0");
@@ -104,7 +105,7 @@ const ArrRes = () => {
 	return (
 		<div>
 			<h1 className="text-center font-bold uppercase bg-red-700">
-				Настаняване за деня <br /> {getFullDate()}
+				Напускане за деня <br /> {getFullDate()}
 			</h1>
 
 			<Table>
@@ -114,8 +115,8 @@ const ArrRes = () => {
 						<TableHead>Име</TableHead>
 						<TableHead>Стая</TableHead>
 
-						<TableHead>Платено</TableHead>
-						<TableHead>Настанен</TableHead>
+						<TableHead>Осбодили</TableHead>
+						<TableHead>Изчистено</TableHead>
 					</TableRow>
 				</TableHeader>
 
@@ -146,13 +147,10 @@ const ArrRes = () => {
 									<Accordion type="multiple">
 										<AccordionItem key={message._id} value={message._id}>
 											<AccordionTrigger>
-												{isPaid(message.isPaid)}
+												{message.isDeparted ? "Да" : "Не"}
 											</AccordionTrigger>
 											<AccordionContent>
-												Повече информация
-												<br /> Booking - {message.isBooking ? "Да" : "Не"}
-												<br />
-												Сума за плащане - {message.priceToCollect} лв.
+												<AlertDialogDeparted id={message._id} />
 											</AccordionContent>
 										</AccordionItem>
 									</Accordion>
@@ -161,10 +159,10 @@ const ArrRes = () => {
 									<Accordion type="multiple">
 										<AccordionItem key={message._id} value={message._id}>
 											<AccordionTrigger>
-												{message.isArrived ? "Да" : "Не"}
+												{message.isCleaned ? "Да" : "Не"}
 											</AccordionTrigger>
 											<AccordionContent>
-												<AlertDialogDemo id={message._id} />
+												<AlertDialogCleaned id={message._id} />
 											</AccordionContent>
 										</AccordionItem>
 									</Accordion>
