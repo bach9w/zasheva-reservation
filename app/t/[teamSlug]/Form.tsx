@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
-import { format, parse } from "date-fns";
+import { format, parse, setHours, setMinutes } from "date-fns";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -293,12 +293,15 @@ export function Booking() {
 												mode="single"
 												selected={
 													field.value
-														? parse(field.value, "dd/MM/yyyy", new Date())
+														? parse(field.value, "dd/MM/yyyy/HH:mm", new Date())
 														: undefined
 												}
-												onSelect={(date: any) =>
-													field.onChange(format(date, "dd/MM/yyyy"))
-												}
+												onSelect={(date: any) => {
+													let dateWithTime = setHours(setMinutes(date, 0), 14);
+													field.onChange(
+														format(dateWithTime, "dd/MM/yyyy/HH:mm"),
+													);
+												}}
 												initialFocus
 											/>
 										</PopoverContent>
@@ -338,12 +341,15 @@ export function Booking() {
 												mode="single"
 												selected={
 													field.value
-														? parse(field.value, "dd/MM/yyyy", new Date())
+														? parse(field.value, "dd/MM/yyyy/HH:mm", new Date())
 														: undefined
 												} // Преобразуване на string в Date за календара
-												onSelect={(date: any) =>
-													field.onChange(format(date, "dd/MM/yyyy"))
-												} // Записване на избраната дата като string
+												onSelect={(date: any) => {
+													let dateWithTime = setHours(setMinutes(date, 0), 12);
+													field.onChange(
+														format(dateWithTime, "dd/MM/yyyy/HH:mm"),
+													);
+												}} // Записване на избраната дата като string
 												initialFocus
 											/>
 										</PopoverContent>

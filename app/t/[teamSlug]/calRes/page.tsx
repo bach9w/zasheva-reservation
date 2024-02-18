@@ -18,6 +18,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiAlertCircle, FiBook } from "react-icons/fi";
+import { StickyHeader } from "@/components/layout/sticky-header";
+import { AiOutlineFieldNumber } from "react-icons/ai";
 
 function getCurrentMonth() {
 	const months = [
@@ -95,6 +97,22 @@ function extractDate(date: string): string {
 	const parts = date.split("/");
 	return parts[0];
 }
+function extractDateFromString(dateStr: string): Date {
+	const [day, month, year] = dateStr.split("/")[0].split("/").map(Number);
+	return new Date(year, month - 1, day); // Месеците в JavaScript са от 0 до 11
+}
+
+// Функция за сравняване на двете дати без време
+function compareDatesOnly(
+	arrivalDateStr: string,
+	departureDateStr: string,
+): boolean {
+	const arrivalDate = extractDateFromString(arrivalDateStr);
+	const departureDate = extractDateFromString(departureDateStr);
+
+	// Връща true, ако датите съвпадат
+	return arrivalDate.toDateString() === departureDate.toDateString();
+}
 
 function GetData(room: string) {
 	const date = new Date();
@@ -107,6 +125,15 @@ function GetData(room: string) {
 	const extractedDepartureDates = departureDates?.map((date) =>
 		extractDate(date),
 	);
+	const reservations = data?.map((reservation) => ({
+		arrivalDate: extractDate(reservation.arivalDate),
+		departureDate: extractDate(reservation.departureDate),
+	}));
+	const sortedReservations = reservations?.sort((a, b) => {
+		const dateA = extractDateFromString(a.arrivalDate);
+		const dateB = extractDateFromString(b.arrivalDate);
+		return dateA.getTime() - dateB.getTime();
+	});
 	if (extractedArrivalDates && extractedDepartureDates) {
 		extractedArrivalDates.forEach((arrivalDate, index) => {
 			const departureDate = extractedDepartureDates[index];
@@ -118,7 +145,26 @@ function GetData(room: string) {
 			let currentDate = new Date(startDate);
 			while (currentDate.getTime() <= endDate.getTime() - 1) {
 				const formattedDate = currentDate.getDate().toString().padStart(2, "0");
-				changeRoomStatus(formattedDate, room, "X");
+
+				if (!sortedReservations) return;
+				for (let i = 0; i < sortedReservations.length - 1; i++) {
+					const currentDepartureDate = extractDateFromString(
+						sortedReservations[i].departureDate,
+					);
+					const nextArrivalDate = extractDateFromString(
+						sortedReservations[i + 1].arrivalDate,
+					);
+
+					// Ако датата на заминаване на текущата резервация съвпада с датата на пристигане на следващата
+					if (
+						currentDepartureDate.toDateString() ===
+						nextArrivalDate.toDateString()
+					) {
+						// Тук задайте статуса на "C" за почистване за датата на заминаване/пристигане
+						changeRoomStatus(formattedDate, room, "X");
+						// Можете да добавите логика за актуализиране на състоянието на резервацията тук
+					}
+				}
 
 				// Преминаваме към следващия ден
 				currentDate.setDate(currentDate.getDate() + 1);
@@ -133,6 +179,55 @@ type ReservationInfo = {
 	date: string;
 };
 
+function roomName(room: string) {
+	switch (room) {
+		case "room3":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 3
+				</div>
+			);
+		case "room4":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 4
+				</div>
+			);
+		case "room5":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 5
+				</div>
+			);
+		case "room6":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 6
+				</div>
+			);
+		case "room7":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 7
+				</div>
+			);
+		case "room8":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 8
+				</div>
+			);
+		case "room9":
+			return (
+				<div className="flex justify-center items-center">
+					<AiOutlineFieldNumber /> 9
+				</div>
+			);
+		default:
+			return "Стая";
+	}
+}
+
 const SpringModal = ({
 	isOpen,
 	setIsOpen,
@@ -144,6 +239,7 @@ const SpringModal = ({
 }) => {
 	const data = getReservationInfo(reservationInfo.room, reservationInfo.date);
 	const arrivalDates = data?.arivalDate;
+
 	const departureDates = data?.departureDate;
 	const guestName = data?.text;
 
@@ -174,14 +270,24 @@ const SpringModal = ({
 								<p className="text-center mb-6">
 									Състояние - {reservationInfo.status}
 								</p>
-								<p className="text-center mb-6">
-									Стая - {reservationInfo.room}
+								<p className="text-center mb-6 flex justify-center">
+									Стая - {roomName(reservationInfo.room)}
 								</p>
-								<p className="text-center mb-6">Име на гост - {guestName}</p>
-
-								<p className="text-center mb-6">
-									Дата на напускане - {departureDates}
-								</p>
+								{data && (
+									<div>
+										<p className="text-center mb-6">
+											Име на гост - {guestName}
+										</p>
+										<p className="text-center mb-6">
+											Дата на напускане - {departureDates}
+										</p>
+									</div>
+								)}
+								{!data && (
+									<div className="items-center mb-6 flex justify-center">
+										Стаята е свободна
+									</div>
+								)}
 							</div>
 							<div className="flex gap-2">
 								<button
@@ -213,6 +319,8 @@ const CalRes = () => {
 		status: "" as any,
 	});
 
+	const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
+
 	GetData("room3");
 	GetData("room4");
 	GetData("room5");
@@ -236,7 +344,7 @@ const CalRes = () => {
 			<h1 className="text-center font-bold uppercase bg-red-700">Календар</h1>
 			<Table>
 				<TableCaption>Резервационен лист</TableCaption>
-				<TableHeader>
+				<TableHeader className="bg-white relative m-5">
 					<TableRow>
 						<TableHead className="w-[100px]">Ден</TableHead>
 						<TableHead className="w-[100px]">Стая 3</TableHead>
@@ -256,7 +364,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room3",
 										invoice.room3Status,
 									)
@@ -267,7 +375,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room4",
 										invoice.room4Status,
 									)
@@ -278,7 +386,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room5",
 										invoice.room5Status,
 									)
@@ -289,7 +397,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room6",
 										invoice.room6Status,
 									)
@@ -300,7 +408,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room7",
 										invoice.room7Status,
 									)
@@ -311,7 +419,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room8",
 										invoice.room8Status,
 									)
@@ -322,7 +430,7 @@ const CalRes = () => {
 							<TableCell
 								onClick={() =>
 									handleClick(
-										`${invoice.day}/02/2024`,
+										`${invoice.day}/${month}/2024/14:00`,
 										"room9",
 										invoice.room9Status,
 									)
