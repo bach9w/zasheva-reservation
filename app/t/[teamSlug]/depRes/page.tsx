@@ -115,7 +115,7 @@ const ArrRes = () => {
 						<TableHead>Име</TableHead>
 						<TableHead>Стая</TableHead>
 
-						<TableHead>Осбодили</TableHead>
+						<TableHead>Освбодили</TableHead>
 						<TableHead>Изчистено</TableHead>
 					</TableRow>
 				</TableHeader>

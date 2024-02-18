@@ -34,7 +34,7 @@ export function AlertDialogCleaned({ id }: { id: any }) {
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
-				<Button variant="outline">Настанен</Button>
+				<Button variant="outline">Почистена</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
 				<AlertDialogHeader>
