@@ -82,7 +82,7 @@ function getFullDate() {
 	const day = String(date.getDate()).padStart(2, "0");
 	const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so we add 1
 	const year = String(date.getFullYear());
-	const formattedDate = `${day}/${month}/${year}`;
+	const formattedDate = `${day}/${month}/${year}/14:00`;
 	return formattedDate;
 }
 
