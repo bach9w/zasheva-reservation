@@ -354,11 +354,11 @@ const CalRes = () => {
 				setIsOpen={setIsOpen}
 				reservationInfo={selectedInfo}
 			/>
-			<h1 className="text-center font-bold uppercase bg-red-700">Календар</h1>
-			<Table>
+
+			<Table className="relative">
 				<TableCaption>Резервационен лист</TableCaption>
-				<TableHeader className="bg-white relative m-5">
-					<TableRow>
+				<TableHeader className="bg-white top-10">
+					<TableRow className="fixed bg-white">
 						<TableHead className="w-[100px]">Ден</TableHead>
 						<TableHead className="w-[100px]">Стая 3</TableHead>
 						<TableHead className="w-[100px]">Стая 4</TableHead>
@@ -369,7 +369,7 @@ const CalRes = () => {
 						<TableHead className="w-[100px]">Стая 9</TableHead>
 					</TableRow>
 				</TableHeader>
-				<TableBody>
+				<TableBody className="pt-[20px]">
 					{globalReservations.map((invoice) => (
 						<TableRow key={invoice.day}>
 							<TableCell className="font-medium">{invoice.day}</TableCell>

@@ -56,6 +56,13 @@ export function getReservationInfo(room: string, day: string) {
 	});
 	return roomInfo;
 }
+export function useFreeRoomCheck(room: string, day: string) {
+	const freeRoomCheck = useQuery(api.functions.roomReservationInfo, {
+		room: room,
+		day: day,
+	});
+	return freeRoomCheck;
+}
 
 export function useDayRes(day: string) {
 	const dayRes = useQuery(api.functions.myDayResQuery, { day: day });

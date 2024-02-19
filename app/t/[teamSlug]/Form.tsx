@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { format, parse, setHours, setMinutes } from "date-fns";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 import { Button } from "@/components/ui/button";
@@ -51,6 +51,7 @@ import {
 import { CalendarIcon, PlusIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
 
 const formSchema = z.object({
 	name: z.string().min(2).max(50),
@@ -68,7 +69,9 @@ const formSchema = z.object({
 });
 
 export function Booking() {
+	const [isRoomFree, setIsRoomFree] = useState(false);
 	const sendMessage = useMutation(api.users.teams.messages.createBooking);
+
 	const team = useCurrentTeam();
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -92,38 +95,53 @@ export function Booking() {
 	const { toast } = useToast();
 	const { reset } = form;
 
+	const isFree = useQuery(api.functions.roomReservationInfo, {
+		room: form.watch("room"),
+		day: form.watch("arivalDate"),
+	});
+
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		void sendMessage({
-			text: values.name,
-			note: values.note,
-			isBooking: values.isBooking,
-			isPaid: values.isPaid,
-			roomNumber: values.room,
-			priceToCollect: values.priceToCollect,
-			numberOfGuests: values.guests,
-			arivalDate: values.arivalDate,
-			departureDate: values.departureDate,
-			teamId: team!._id,
-		}).then(() => {
-			console.log(values);
-			reset({
-				name: "",
-				note: "",
-				isBooking: false,
-				isPaid: false,
-				room: "",
-				priceToCollect: "",
-				guests: "",
-				arivalDate: "",
-				departureDate: "",
+		if (!isFree) {
+			void sendMessage({
+				text: values.name,
+				note: values.note,
+				isBooking: values.isBooking,
+				isPaid: values.isPaid,
+				roomNumber: values.room,
+				priceToCollect: values.priceToCollect,
+				numberOfGuests: values.guests,
+				arivalDate: values.arivalDate,
+				departureDate: values.departureDate,
+				teamId: team!._id,
+			}).then(() => {
+				console.log(values);
+				reset({
+					name: "",
+					note: "",
+					isBooking: false,
+					isPaid: false,
+					room: "",
+					priceToCollect: "",
+					guests: "",
+					arivalDate: "",
+					departureDate: "",
+				});
+				toast({
+					title: "Резервацията е обработена успешно",
+					description: "Продължи напред",
+					variant: "success",
+				});
 			});
+		} else {
 			toast({
-				title: "Резервацията е обработена успешно",
-				description: "Продължи напред",
-				variant: "success",
+				title: "Стаята не е свободна",
+				description: "Избери друга стая",
+				variant: "destructive",
 			});
-		});
+			return;
+		}
 	}
+
 	return (
 		<Card>
 			<CardHeader></CardHeader>
