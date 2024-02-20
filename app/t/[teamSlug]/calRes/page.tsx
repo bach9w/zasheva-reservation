@@ -355,6 +355,7 @@ const CalRes = () => {
 
 			<Table className="">
 				<TableCaption>Резервационен лист</TableCaption>
+
 				<TableHeader className="bg-white bg-opacity-100 w-full flex justify-center fixed">
 					<TableHead className=" w-[10%] flex items-center justify-center">
 						Ден
@@ -383,7 +384,7 @@ const CalRes = () => {
 						</TableHead>
 					</TableRow>
 				</TableHeader>
-
+				<div className="bg-black h-10"></div>
 				<TableBody className="">
 					{globalReservations.map((invoice) => (
 						<TableRow key={invoice.day}>
