@@ -172,7 +172,7 @@ function GetData(room: string) {
 						nextArrivalDate.toDateString()
 					) {
 						// Тук задайте статуса на "C" за почистване за датата на заминаване/пристигане
-						changeRoomStatus(formattedDate, room, "C");
+						changeRoomStatus(formattedDate, room, "X");
 						// Можете да добавите логика за актуализиране на състоянието на резервацията тук
 					} else {
 						changeRoomStatus(formattedDate, room, "X");
