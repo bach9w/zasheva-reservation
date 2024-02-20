@@ -10,6 +10,9 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
+import { MdCleaningServices } from "react-icons/md";
+import { FaMinus } from "react-icons/fa";
+
 import { Badge } from "@/components/ui/badge";
 
 import { useReservationRooms } from "../hooks";
@@ -186,6 +189,24 @@ function GetData(room: string) {
 	}
 }
 
+function roomForClean(day: string, room: string) {
+{
+	const date = new Date();
+	const today = date.getDate();
+	const month = date.getMonth();
+	const year = date.getFullYear();
+	const data = useReservationRooms(room);
+	const arrivalDates = data?.map((arrival) => arrival.arivalDate);
+	const departureDates = data?.map((departure) => departure.departureDate);
+	const extractedArrivalDates = arrivalDates?.map((date) => extractDate(date));
+	
+	if (departureDates && departureDates.includes(today.toString())) {
+		return <Badge variant="destructive">{status}</Badge>;
+	} else {
+		return <Badge variant="success">{status}</Badge>;
+	}
+}
+
 type ReservationInfo = {
 	status: string;
 	room: string;
@@ -198,6 +219,7 @@ function roomName(room: string) {
 			return (
 				<div className="flex justify-center items-center">
 					<AiOutlineFieldNumber /> 3
+
 				</div>
 			);
 		case "room4":
@@ -355,24 +377,30 @@ const CalRes = () => {
 				reservationInfo={selectedInfo}
 			/>
 
-			<Table className="relative">
+			<Table className="">
 				<TableCaption>Резервационен лист</TableCaption>
-				<TableHeader className="bg-white top-10">
-					<TableRow className="fixed bg-white">
-						<TableHead className="w-[100px]">Ден</TableHead>
-						<TableHead className="w-[100px]">Стая 3</TableHead>
-						<TableHead className="w-[100px]">Стая 4</TableHead>
-						<TableHead className="w-[100px]">Стая 5</TableHead>
-						<TableHead className="w-[100px]">Стая 6</TableHead>
-						<TableHead className="w-[100px]">Стая 7</TableHead>
-						<TableHead className="w-[100px]">Стая 8</TableHead>
-						<TableHead className="w-[100px]">Стая 9</TableHead>
+				<TableHeader className="bg-white fixed">
+					<TableRow className=" bg-white  ">
+						<TableHead className=" w-full">Ден</TableHead>
+						<TableHead className="w-auto ">Стая 3</TableHead>
+						<TableHead className="w-auto ">Стая 4</TableHead>
+						<TableHead className="w-auto ">Стая 5</TableHead>
+						<TableHead className="w-full ">Стая 6</TableHead>
+						<TableHead className="w-full">Стая 7</TableHead>
+						<TableHead className="w-full">Стая 8</TableHead>
+						<TableHead className="w-full">Стая 9</TableHead>
 					</TableRow>
 				</TableHeader>
-				<TableBody className="pt-[20px]">
+				<TableBody className="">
 					{globalReservations.map((invoice) => (
 						<TableRow key={invoice.day}>
-							<TableCell className="font-medium">{invoice.day}</TableCell>
+							<TableCell className="font-medium flex gap-12 items-center ">
+								{invoice.day}
+								<MdCleaningServices className="bg-orange-600" />
+								<div className="h-5 w-5 text-black text-center bg-white text-red">
+									2
+								</div>
+							</TableCell>
 
 							<TableCell
 								onClick={() =>
