@@ -189,24 +189,6 @@ function GetData(room: string) {
 	}
 }
 
-function roomForClean(day: string, room: string) {
-{
-	const date = new Date();
-	const today = date.getDate();
-	const month = date.getMonth();
-	const year = date.getFullYear();
-	const data = useReservationRooms(room);
-	const arrivalDates = data?.map((arrival) => arrival.arivalDate);
-	const departureDates = data?.map((departure) => departure.departureDate);
-	const extractedArrivalDates = arrivalDates?.map((date) => extractDate(date));
-	
-	if (departureDates && departureDates.includes(today.toString())) {
-		return <Badge variant="destructive">{status}</Badge>;
-	} else {
-		return <Badge variant="success">{status}</Badge>;
-	}
-}
-
 type ReservationInfo = {
 	status: string;
 	room: string;
@@ -219,7 +201,6 @@ function roomName(room: string) {
 			return (
 				<div className="flex justify-center items-center">
 					<AiOutlineFieldNumber /> 3
-
 				</div>
 			);
 		case "room4":
