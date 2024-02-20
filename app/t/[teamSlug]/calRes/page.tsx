@@ -10,18 +10,15 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-import { MdCleaningServices } from "react-icons/md";
-import { FaMinus } from "react-icons/fa";
-
 import { Badge } from "@/components/ui/badge";
 
 import { useReservationRooms } from "../hooks";
 import { getReservationInfo } from "../hooks";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+
 import { AnimatePresence, motion } from "framer-motion";
 import { FiAlertCircle, FiBook } from "react-icons/fi";
-import { StickyHeader } from "@/components/layout/sticky-header";
+
 import { AiOutlineFieldNumber } from "react-icons/ai";
 
 function getCurrentMonth() {
@@ -131,6 +128,7 @@ function GetData(room: string) {
 	const reservations = data?.map((reservation) => ({
 		arrivalDate: extractDate(reservation.arivalDate),
 		departureDate: extractDate(reservation.departureDate),
+		cleaned: reservation.isCleaned,
 	}));
 	const sortedReservations = reservations?.sort((a, b) => {
 		const dateA = extractDateFromString(a.arrivalDate);
@@ -156,10 +154,9 @@ function GetData(room: string) {
 						)
 					) {
 						changeRoomStatus(formattedDate, room, "X");
-					} else {
-						changeRoomStatus(formattedDate, room, "X");
 					}
 				});
+
 				if (!sortedReservations) return;
 				for (let i = 0; i < sortedReservations.length - 1; i++) {
 					const currentDepartureDate = extractDateFromString(
@@ -177,8 +174,6 @@ function GetData(room: string) {
 						// Тук задайте статуса на "C" за почистване за датата на заминаване/пристигане
 						changeRoomStatus(formattedDate, room, "X");
 						// Можете да добавите логика за актуализиране на състоянието на резервацията тук
-					} else {
-						changeRoomStatus(formattedDate, room, "X");
 					}
 				}
 
@@ -282,7 +277,7 @@ const SpringModal = ({
 								Резервация
 							</div>
 
-							<div>
+							<div className="">
 								<p className="text-center mb-6">
 									Състояние - {reservationInfo.status}
 								</p>
@@ -360,27 +355,40 @@ const CalRes = () => {
 
 			<Table className="">
 				<TableCaption>Резервационен лист</TableCaption>
-				<TableHeader className="bg-white fixed">
-					<TableRow className=" bg-white  ">
-						<TableHead className=" w-full">Ден</TableHead>
-						<TableHead className="w-auto ">Стая 3</TableHead>
-						<TableHead className="w-auto ">Стая 4</TableHead>
-						<TableHead className="w-auto ">Стая 5</TableHead>
-						<TableHead className="w-full ">Стая 6</TableHead>
-						<TableHead className="w-full">Стая 7</TableHead>
-						<TableHead className="w-full">Стая 8</TableHead>
-						<TableHead className="w-full">Стая 9</TableHead>
+				<TableHeader className="bg-white bg-opacity-100 w-full flex justify-center fixed">
+					<TableHead className=" w-[10%] flex items-center justify-center">
+						Ден
+					</TableHead>
+					<TableRow className="w-full flex justify-center text-left items-center lg:gap-[85px] gap-3 md:gap-[69px]">
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 3
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 4
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 5
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 6
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 7
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 8
+						</TableHead>
+						<TableHead className="w-auto hover:bg-blue-500 text-black ">
+							Стая 9
+						</TableHead>
 					</TableRow>
 				</TableHeader>
+
 				<TableBody className="">
 					{globalReservations.map((invoice) => (
 						<TableRow key={invoice.day}>
 							<TableCell className="font-medium flex gap-12 items-center ">
 								{invoice.day}
-								<MdCleaningServices className="bg-orange-600" />
-								<div className="h-5 w-5 text-black text-center bg-white text-red">
-									2
-								</div>
 							</TableCell>
 
 							<TableCell
