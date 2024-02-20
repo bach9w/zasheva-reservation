@@ -66,25 +66,38 @@ function generateCurrentMonthReservations() {
 	return reservations;
 }
 
-const globalReservations = generateCurrentMonthReservations();
+let globalReservations = generateCurrentMonthReservations();
 
 function changeRoomStatus(day: string, room: string, status: string) {
-	const reservation = globalReservations.find((res) => res.day === day);
+	// Намираме индекса на резервацията, която искаме да променим
+	const reservationIndex = globalReservations.findIndex(
+		(res) => res.day === day,
+	);
 
-	if (!reservation) {
+	if (reservationIndex === -1) {
 		throw new Error("Reservation not found");
 	}
+
+	const reservation = globalReservations[reservationIndex];
 	const roomStatusKey = room + "Status";
 
-	const typedReservation: { [key: string]: string } = reservation;
-
-	// eslint-disable-next-line no-prototype-builtins
-	if (!typedReservation.hasOwnProperty(roomStatusKey)) {
+	if (!(roomStatusKey in reservation)) {
 		throw new Error("Room status not found");
 	}
-	typedReservation[roomStatusKey] = status;
-}
 
+	// Създаваме нов обект за резервацията с променения статус, използвайки имутабилност
+	const updatedReservation = {
+		...reservation,
+		[roomStatusKey]: status,
+	};
+
+	// Актуализираме глобалния масив с новата резервация, също така по имутабилен начин
+	globalReservations = [
+		...globalReservations.slice(0, reservationIndex),
+		updatedReservation,
+		...globalReservations.slice(reservationIndex + 1),
+	];
+}
 function checkStatus(status: string) {
 	if (status === "X") {
 		return <Badge variant="destructive">{status}</Badge>;
