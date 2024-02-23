@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { useReservationRooms } from "../hooks";
 import { getReservationInfo } from "../hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { FiAlertCircle, FiBook } from "react-icons/fi";
@@ -344,6 +344,11 @@ const CalRes = () => {
 	});
 
 	const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	GetData("room3");
 	GetData("room4");
@@ -360,136 +365,138 @@ const CalRes = () => {
 
 	return (
 		<div>
-			<SpringModal
-				isOpen={isOpen}
-				setIsOpen={setIsOpen}
-				reservationInfo={selectedInfo}
-			/>
+			{isClient && (
+				<>
+					<SpringModal
+						isOpen={isOpen}
+						setIsOpen={setIsOpen}
+						reservationInfo={selectedInfo}
+					/>
 
-			<Table className="">
-				<TableCaption>Резервационен лист</TableCaption>
+					<Table className="">
+						<TableCaption>Резервационен лист</TableCaption>
 
-				<TableHeader className="bg-white bg-opacity-100 w-full flex justify-center fixed">
-					<TableHead className=" w-[10%] flex items-center justify-center">
-						Ден
-					</TableHead>
-					<TableRow className="w-full flex justify-center text-left items-center lg:gap-[85px] gap-3 md:gap-[69px]">
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 3
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 4
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 5
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 6
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 7
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 8
-						</TableHead>
-						<TableHead className="w-auto hover:bg-blue-500 text-black ">
-							Стая 9
-						</TableHead>
-					</TableRow>
-				</TableHeader>
-				<div className="bg-black h-10"></div>
-				<TableBody className="">
-					{globalReservations.map((invoice) => (
-						<TableRow key={invoice.day}>
-							<TableCell className="font-medium flex gap-12 items-center ">
-								{invoice.day}
-							</TableCell>
+						<TableHeader className="bg-white bg-opacity-100 w-full flex justify-center fixed">
+							<TableHead className=" w-[10%] flex items-center justify-center">
+								Ден
+							</TableHead>
+							<TableRow className="w-full flex justify-center text-[10px] sm:text-sm text-left items-center lg:gap-[85px] gap-3 md:gap-[69px]">
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 3
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 4
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 5
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 6
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 7
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 8
+								</TableHead>
+								<TableHead className="w-1/7 hover:bg-blue-500 text-black ">
+									Стая 9
+								</TableHead>
+							</TableRow>
+						</TableHeader>
+						<div className="bg-black h-10"></div>
+						<TableBody className="">
+							{globalReservations.map((invoice) => (
+								<TableRow key={invoice.day}>
+									<TableCell className="font-medium flex gap-12 items-center ">
+										{invoice.day}
+									</TableCell>
 
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room3",
-										invoice.room3Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room3Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room4",
-										invoice.room4Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room4Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room5",
-										invoice.room5Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room5Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room6",
-										invoice.room6Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room6Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room7",
-										invoice.room7Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room7Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room8",
-										invoice.room8Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room8Status)}
-							</TableCell>
-							<TableCell
-								onClick={() =>
-									handleClick(
-										`${invoice.day}/${month}/2024/14:00`,
-										"room9",
-										invoice.room9Status,
-									)
-								}
-							>
-								{checkStatus(invoice.room9Status)}
-							</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-				<TableFooter>
-					<TableRow>
-						<TableCell colSpan={7}>{getCurrentMonth()}</TableCell>
-						<TableCell className="text-right">
-							{/*<Select>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room3",
+												invoice.room3Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room3Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room4",
+												invoice.room4Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room4Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room5",
+												invoice.room5Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room5Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room6",
+												invoice.room6Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room6Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room7",
+												invoice.room7Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room7Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room8",
+												invoice.room8Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room8Status)}
+									</TableCell>
+									<TableCell
+										onClick={() =>
+											handleClick(
+												`${invoice.day}/${month}/2024/14:00`,
+												"room9",
+												invoice.room9Status,
+											)
+										}
+									>
+										{checkStatus(invoice.room9Status)}
+									</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+						<TableFooter>
+							<TableRow>
+								<TableCell colSpan={7}>{getCurrentMonth()}</TableCell>
+								<TableCell className="text-right">
+									{/*<Select>
 								<SelectTrigger>
 									<SelectValue placeholder="Избери" />
 								</SelectTrigger>
@@ -511,10 +518,12 @@ const CalRes = () => {
 									</SelectGroup>
 								</SelectContent>
 					</Select>*/}
-						</TableCell>
-					</TableRow>
-				</TableFooter>
-			</Table>
+								</TableCell>
+							</TableRow>
+						</TableFooter>
+					</Table>
+				</>
+			)}
 		</div>
 	);
 };
