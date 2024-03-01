@@ -11,6 +11,15 @@ import {
 } from "@/components/ui/table";
 
 import { Badge } from "@/components/ui/badge";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 import { useReservationRooms } from "../hooks";
 import { getReservationInfo } from "../hooks";
@@ -21,8 +30,8 @@ import { FiAlertCircle, FiBook } from "react-icons/fi";
 
 import { AiOutlineFieldNumber } from "react-icons/ai";
 
-function getCurrentMonth() {
-	const months = [
+function getMonthNames(): string[] {
+	return [
 		"Януари",
 		"Февруари",
 		"Март",
@@ -36,18 +45,12 @@ function getCurrentMonth() {
 		"Ноември",
 		"Декември",
 	];
-
-	const currentMonthIndex = new Date().getMonth();
-	return months[currentMonthIndex];
 }
 
-function generateCurrentMonthReservations() {
-	const date = new Date();
-	const month = date.getMonth();
-	const year = date.getFullYear();
+function generateCurrentMonthReservations(month: number) {
+	const year = new Date().getFullYear();
 	const daysInMonth = new Date(year, month + 1, 0).getDate();
 	const reservations = [];
-
 	for (let day = 1; day <= daysInMonth; day++) {
 		const reservation = {
 			day: day.toString().padStart(2, "0"),
@@ -59,14 +62,14 @@ function generateCurrentMonthReservations() {
 			room8Status: "F",
 			room9Status: "F",
 		};
-
 		reservations.push(reservation);
 	}
-
 	return reservations;
 }
 
-let globalReservations = generateCurrentMonthReservations();
+let globalReservations = generateCurrentMonthReservations(
+	new Date().getMonth(),
+);
 
 function changeRoomStatus(day: string, room: string, status: string) {
 	// Намираме индекса на резервацията, която искаме да променим
@@ -106,95 +109,56 @@ function checkStatus(status: string) {
 	}
 }
 
-function extractDate(date: string): string {
-	const parts = date.split("/");
-	return parts[0];
-}
-function extractDateFromString(dateStr: string): Date {
-	const [day, month, year] = dateStr.split("/")[0].split("/").map(Number);
-	return new Date(year, month - 1, day); // Месеците в JavaScript са от 0 до 11
-}
+function GetData(room: string, month: number) {
+	const currentDate = new Date();
+	const currentMonth = month; // Месецът се връща като число от 0 до 11
+	const currentYear = currentDate.getFullYear();
 
-// Функция за сравняване на двете дати без време
-function compareDatesOnly(
-	arrivalDateStr: string,
-	departureDateStr: string,
-): boolean {
-	const arrivalDate = extractDateFromString(arrivalDateStr);
-	const departureDate = extractDateFromString(departureDateStr);
-
-	// Връща true, ако датите съвпадат
-	return arrivalDate.toDateString() === departureDate.toDateString();
-}
-
-function GetData(room: string) {
-	const date = new Date();
-	const month = date.getMonth();
-	const year = date.getFullYear();
 	const data = useReservationRooms(room);
-	const arrivalDates = data?.map((arrival) => arrival.arivalDate);
-	const departureDates = data?.map((departure) => departure.departureDate);
-	const extractedArrivalDates = arrivalDates?.map((date) => extractDate(date));
-	const extractedDepartureDates = departureDates?.map((date) =>
-		extractDate(date),
-	);
-	const reservations = data?.map((reservation) => ({
-		arrivalDate: extractDate(reservation.arivalDate),
-		departureDate: extractDate(reservation.departureDate),
-		cleaned: reservation.isCleaned,
-	}));
-	const sortedReservations = reservations?.sort((a, b) => {
-		const dateA = extractDateFromString(a.arrivalDate);
-		const dateB = extractDateFromString(b.arrivalDate);
-		return dateA.getTime() - dateB.getTime();
-	});
-	if (extractedArrivalDates && extractedDepartureDates) {
-		extractedArrivalDates.forEach((arrivalDate, index) => {
-			const departureDate = extractedDepartureDates[index];
-			const startDate = new Date(year, month, parseInt(arrivalDate, 10));
-			const endDate = new Date(year, month, parseInt(departureDate, 10));
 
-			// Генерираме всички дати между пристигане и заминаване
-			// eslint-disable-next-line prefer-const
-			let currentDate = new Date(startDate);
-			while (currentDate.getTime() <= endDate.getTime() - 1) {
-				const formattedDate = currentDate.getDate().toString().padStart(2, "0");
-				reservations?.forEach((reservations) => {
-					if (
-						compareDatesOnly(
-							reservations.arrivalDate,
-							reservations.departureDate,
-						)
-					) {
-						changeRoomStatus(formattedDate, room, "X");
-					}
-				});
-
-				if (!sortedReservations) return;
-				for (let i = 0; i < sortedReservations.length - 1; i++) {
-					const currentDepartureDate = extractDateFromString(
-						sortedReservations[i].departureDate,
-					);
-					const nextArrivalDate = extractDateFromString(
-						sortedReservations[i + 1].arrivalDate,
-					);
-
-					// Ако датата на заминаване на текущата резервация съвпада с датата на пристигане на следващата
-					if (
-						currentDepartureDate.toDateString() ===
-						nextArrivalDate.toDateString()
-					) {
-						// Тук задайте статуса на "C" за почистване за датата на заминаване/пристигане
-						changeRoomStatus(formattedDate, room, "X");
-						// Можете да добавите логика за актуализиране на състоянието на резервацията тук
-					}
-				}
-
-				// Преминаваме към следващия ден
-				currentDate.setDate(currentDate.getDate() + 1);
-			}
-		});
+	// Помощна функция за извличане на обект Date от зададен стринг
+	function parseDateFromString(dateStr: string): Date {
+		const [day, month, year, time] = dateStr.split("/");
+		const [hours, minutes] = time.split(":");
+		return new Date(
+			parseInt(year),
+			parseInt(month) - 1,
+			parseInt(day),
+			parseInt(hours),
+			parseInt(minutes),
+		);
 	}
+
+	// Филтрирайте и сортирайте резервациите за текущия месец
+	const reservationsForCurrentMonth = data
+		?.filter(
+			(reservation) =>
+				parseDateFromString(reservation.arivalDate).getMonth() ===
+					currentMonth &&
+				parseDateFromString(reservation.arivalDate).getFullYear() ===
+					currentYear,
+		)
+		.map((reservation) => ({
+			arrivalDate: parseDateFromString(reservation.arivalDate),
+			departureDate: parseDateFromString(reservation.departureDate),
+			cleaned: reservation.isCleaned,
+		}))
+		.sort((a, b) => a.arrivalDate.getTime() - b.arrivalDate.getTime());
+
+	if (!reservationsForCurrentMonth?.length) return;
+
+	reservationsForCurrentMonth.forEach((reservation) => {
+		for (
+			let date = new Date(reservation.arrivalDate);
+			date <= reservation.departureDate;
+			date.setDate(date.getDate() + 1)
+		) {
+			const formattedDate = date.getDate().toString().padStart(2, "0");
+
+			// Проверка и актуализация на статуса на стаята за всяка дата
+			changeRoomStatus(formattedDate, room, reservation.cleaned ? "F" : "X");
+		}
+	});
 }
 
 type ReservationInfo = {
@@ -336,6 +300,7 @@ const SpringModal = ({
 };
 
 const CalRes = () => {
+	const [change, setChange] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [selectedInfo, setSelectedInfo] = useState({
 		date: "",
@@ -344,19 +309,26 @@ const CalRes = () => {
 	});
 
 	const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
+	const lmonth = new Date().getMonth().toString().padStart(2, "0");
+	const [cMonth, setCMonth] = useState(parseInt(lmonth, 10));
 	const [isClient, setIsClient] = useState(false);
+	const monthNames = getMonthNames();
 
 	useEffect(() => {
 		setIsClient(true);
-	}, []);
+		if (change) {
+			setChange(false);
+			globalReservations = generateCurrentMonthReservations(cMonth);
+		}
+	}, [cMonth]);
 
-	GetData("room3");
-	GetData("room4");
-	GetData("room5");
-	GetData("room6");
-	GetData("room7");
-	GetData("room8");
-	GetData("room9");
+	GetData("room3", cMonth);
+	GetData("room4", cMonth);
+	GetData("room5", cMonth);
+	GetData("room6", cMonth);
+	GetData("room7", cMonth);
+	GetData("room8", cMonth);
+	GetData("room9", cMonth);
 
 	const handleClick = (day: string, room: string, status: any) => {
 		setSelectedInfo({ date: day, room, status: checkStatus(status) });
@@ -406,119 +378,122 @@ const CalRes = () => {
 						</TableHeader>
 						<div className="bg-black h-10"></div>
 						<TableBody className="">
-							{globalReservations.map((invoice) => (
-								<TableRow key={invoice.day}>
-									<TableCell className="font-medium flex gap-12 items-center ">
-										{invoice.day}
-									</TableCell>
+							{!change && (
+								<>
+									{globalReservations.map((invoice) => (
+										<TableRow key={invoice.day}>
+											<TableCell className="font-medium flex gap-12 items-center ">
+												{invoice.day}
+											</TableCell>
 
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room3",
-												invoice.room3Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room3Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room4",
-												invoice.room4Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room4Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room5",
-												invoice.room5Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room5Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room6",
-												invoice.room6Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room6Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room7",
-												invoice.room7Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room7Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room8",
-												invoice.room8Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room8Status)}
-									</TableCell>
-									<TableCell
-										onClick={() =>
-											handleClick(
-												`${invoice.day}/${month}/2024/14:00`,
-												"room9",
-												invoice.room9Status,
-											)
-										}
-									>
-										{checkStatus(invoice.room9Status)}
-									</TableCell>
-								</TableRow>
-							))}
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room3",
+														invoice.room3Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room3Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room4",
+														invoice.room4Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room4Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room5",
+														invoice.room5Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room5Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room6",
+														invoice.room6Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room6Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room7",
+														invoice.room7Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room7Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room8",
+														invoice.room8Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room8Status)}
+											</TableCell>
+											<TableCell
+												onClick={() =>
+													handleClick(
+														`${invoice.day}/${month}/2024/14:00`,
+														"room9",
+														invoice.room9Status,
+													)
+												}
+											>
+												{checkStatus(invoice.room9Status)}
+											</TableCell>
+										</TableRow>
+									))}
+								</>
+							)}
 						</TableBody>
 						<TableFooter>
 							<TableRow>
-								<TableCell colSpan={7}>{getCurrentMonth()}</TableCell>
-								<TableCell className="text-right">
-									{/*<Select>
-								<SelectTrigger>
-									<SelectValue placeholder="Избери" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectGroup>
-										<SelectLabel>Месец</SelectLabel>
-										<SelectItem value="jan">Януари</SelectItem>
-										<SelectItem value="feb">Февруари</SelectItem>
-										<SelectItem value="mar">Март</SelectItem>
-										<SelectItem value="apr">Април</SelectItem>
-										<SelectItem value="may">Май</SelectItem>
-										<SelectItem value="jun">Юни</SelectItem>
-										<SelectItem value="jul">Юли</SelectItem>
-										<SelectItem value="aug">Август</SelectItem>
-										<SelectItem value="sep">Септември</SelectItem>
-										<SelectItem value="oct">Октомври</SelectItem>
-										<SelectItem value="nov">Ноември</SelectItem>
-										<SelectItem value="dec">Декември</SelectItem>
-									</SelectGroup>
-								</SelectContent>
-					</Select>*/}
+								<TableCell colSpan={7}>
+									<Select
+										value={cMonth.toString()}
+										onValueChange={(value) => {
+											setCMonth(parseInt(value, 10));
+											setChange(true);
+										}}
+									>
+										<SelectTrigger>
+											<SelectValue placeholder="Избери" />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectLabel>Месец</SelectLabel>
+												{[...Array(12)].map((_, index) => (
+													<SelectItem key={index} value={index.toString()}>
+														{monthNames[index]}
+													</SelectItem>
+												))}
+											</SelectGroup>
+										</SelectContent>
+									</Select>
 								</TableCell>
+								<TableCell className="text-right"></TableCell>
 							</TableRow>
 						</TableFooter>
 					</Table>

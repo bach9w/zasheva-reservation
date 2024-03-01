@@ -50,11 +50,17 @@ export function useReservationRooms(room: string) {
 }
 
 export function getReservationInfo(room: string, day: string) {
+	const date = new Date();
+	const month = (date.getMonth() + 1).toString().padStart(2, "0");
+
 	const roomInfo = useQuery(api.functions.roomReservationInfo, {
 		room: room,
 		day: day,
 	});
-	return roomInfo;
+	const parts = roomInfo?.arivalDate.split("/");
+	if (parts && parts[1] === month) {
+		return roomInfo;
+	}
 }
 export function useFreeRoomCheck(room: string, day: string) {
 	const freeRoomCheck = useQuery(api.functions.roomReservationInfo, {
