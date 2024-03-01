@@ -308,10 +308,10 @@ const CalRes = () => {
 		status: "" as any,
 	});
 
-	const month = (new Date().getMonth() + 1).toString().padStart(2, "0");
 	const lmonth = new Date().getMonth().toString().padStart(2, "0");
 	const [cMonth, setCMonth] = useState(parseInt(lmonth, 10));
 	const [isClient, setIsClient] = useState(false);
+	const [modalMonth, setModalMonth] = useState(cMonth + 1);
 	const monthNames = getMonthNames();
 
 	useEffect(() => {
@@ -319,6 +319,7 @@ const CalRes = () => {
 		if (change) {
 			setChange(false);
 			globalReservations = generateCurrentMonthReservations(cMonth);
+			setModalMonth(cMonth + 1);
 		}
 	}, [cMonth]);
 
@@ -331,6 +332,7 @@ const CalRes = () => {
 	GetData("room9", cMonth);
 
 	const handleClick = (day: string, room: string, status: any) => {
+		console.log(day);
 		setSelectedInfo({ date: day, room, status: checkStatus(status) });
 		setIsOpen(true);
 	};
@@ -389,7 +391,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room3",
 														invoice.room3Status,
 													)
@@ -400,7 +404,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room4",
 														invoice.room4Status,
 													)
@@ -411,7 +417,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room5",
 														invoice.room5Status,
 													)
@@ -422,7 +430,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room6",
 														invoice.room6Status,
 													)
@@ -433,7 +443,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room7",
 														invoice.room7Status,
 													)
@@ -444,7 +456,9 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth
+															.toString()
+															.padStart(2, "0")}/2024/14:00`,
 														"room8",
 														invoice.room8Status,
 													)
@@ -455,7 +469,7 @@ const CalRes = () => {
 											<TableCell
 												onClick={() =>
 													handleClick(
-														`${invoice.day}/${month}/2024/14:00`,
+														`${invoice.day}/${modalMonth}/2024/14:00`,
 														"room9",
 														invoice.room9Status,
 													)

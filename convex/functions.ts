@@ -56,24 +56,66 @@ export const depResQuery = baseQuery({
 	},
 });
 
+function dateLessThan(date1: string, date2: string): boolean {
+	// Разделяне на входните низове на компоненти
+	const parts1 = date1.split("/");
+	const parts2 = date2.split("/");
+
+	// Извличане на месеците и преобразуване към числа
+	const month1 = parseInt(parts1[1], 10);
+	const month2 = parseInt(parts2[1], 10);
+
+	// Сравняване на месеците първо
+	if (month1 !== month2) {
+		return month1 < month2;
+	}
+
+	// Ако месеците са еднакви, продължаваме със сравнението на дните
+	const day1 = parseInt(parts1[0], 10);
+	const day2 = parseInt(parts2[0], 10);
+	if (day1 !== day2) {
+		return day1 < day2;
+	} else if (day1 === day2) {
+		return true;
+	}
+
+	// Ако и дните са еднакви, сравняваме годините
+	const year1 = parseInt(parts1[2], 10);
+	const year2 = parseInt(parts2[2], 10);
+	if (year1 !== year2) {
+		return year1 < year2;
+	}
+
+	// Накрая, ако и годините са еднакви, сравняваме времето
+	const time1 = parts1[3].split(":").map(Number);
+	const time2 = parts2[3].split(":").map(Number);
+	const hours1 = time1[0];
+	const minutes1 = time1[1];
+	const hours2 = time2[0];
+	const minutes2 = time2[1];
+
+	if (hours1 !== hours2) {
+		return hours1 < hours2;
+	}
+
+	return minutes1 < minutes2;
+}
+
 export const roomReservationInfo = baseQuery({
 	args: {
 		room: v.string(),
 		day: v.string(),
 	},
 	handler: async (ctx, args) => {
-		const reservation = await ctx.db
-			.query("messages")
-			.filter((q) =>
-				q.and(
-					q.lte(q.field("arivalDate"), args.day),
-
-					q.gte(q.field("departureDate"), args.day),
-					q.eq(q.field("roomNumber"), args.room),
-				),
-			)
-			.unique();
-		return reservation;
+		for await (const reservation of ctx.db.query("messages")) {
+			if (
+				dateLessThan(reservation.arivalDate, args.day) &&
+				dateLessThan(args.day, reservation.departureDate) &&
+				reservation.roomNumber === args.room
+			) {
+				return reservation;
+			}
+		}
 	},
 });
 
